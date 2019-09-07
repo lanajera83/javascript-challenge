@@ -1,49 +1,37 @@
 // from data.js
 var tableData = data;
 
-// YOUR CODE HERE!
+// select tbody 
+tbody = d3.select("tbody")
 
-// Select the button
-var button = d3.select("#filter-btn");
+// using Object.entries to get key, value data inside of the table
+// and loop through them to add to the table in html
+function displayData(data){ 
+    tbody.text("")
+    data.forEach(function(busqueda){
+    new_tr = tbody.append("tr")
+    Object.entries(busqueda).forEach(function([key, value]){
+        new_td = new_tr.append("td").text(value)	
+    })
+})}
 
-button.on("click", function() {
+//displayData(tableData)
 
-  // Select the input element and get the raw HTML node
-  var inputElement = d3.select("#datetime");
+//select the web user's input and the filter button
+var dateInputText = d3.select("#datetime")
+var button = d3.select("filter-btn")
 
-  // Get the value property of the input element
-  var inputValue = inputElement.property("value");
+// filter data with date that the user inputs
+function clickSelect(){
+    //don't refresh the page!
+    d3.event.preventDefault();
+    //print the value that was input
+    console.log(dateInputText.property("value"));
+    //create a new table showing only the filterd data
+    var new_table = tableData.filter(busqueda => busqueda.datetime===dateInputText.property("value"))
+    //display the new table
+    displayData(new_table);
+}
 
-  console.log(inputValue);
-  //console.log(tableData);
-
-  var filteredData = tableData.filter(file => file.datetime === inputValue);
-
-  console.log(filteredData);
-
-  // BONUS: Calculate summary statistics for the age field of the filtered data
-
-  // First, create an array with just the age values
-
-  var date = filteredData.map(i => i.datetime);
-  //var city = filteredData.map(i => i.city);
-  //var state =
-  //var country =
-  //var shape = 
-  //var duration = 
-  //var comment = 
-
-  // Then, select the unordered list element by class name
-  var list = d3.select(".summary");
-
-  // remove any children from the list to
-  //list.html("");
-
-  // append stats to the list
-  //list.append("th").text(date);
-  //list.append("th").text(city);
-  //list.append("li").text(`Mode: ${mode}`);
-  //list.append("li").text(`Variance: ${variance}`);
-  //list.append("li").text(`Standard Deviation: ${standardDeviation}`);
-  displayData(date);
-});
+// event listener to handle change and click
+dateInputText.on("change", clickSelect)
